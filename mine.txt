@@ -1,0 +1,125 @@
+import React, { useState } from "react";
+import { View, Text, StyleSheet, ScrollView, FlatList, Image, TouchableOpacity } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import SearchBar from "../components/SearchBar";  // ✅ import reusable search bar
+
+const movies = [
+  { id: "1", title: "Avengers: Endgame", poster: "https://image.tmdb.org/t/p/w500/ulzhLuWrPK07P1YkdWQLZnQh1JL.jpg" },
+  { id: "2", title: "Joker", poster: "https://image.tmdb.org/t/p/w500/udDclJoHjfjb8Ekgsd4FDteOkCU.jpg" },
+  { id: "3", title: "Frozen II", poster: "https://image.tmdb.org/t/p/w500/qdfARIhgpgZOBh3vfNhWS4hmSo3.jpg" },
+];
+
+export default function HomeScreen() {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  return (
+    <ScrollView style={styles.container}>
+      {/* Header */}
+      <View style={styles.header}>
+        <Text style={styles.appName}>🎬 Benny-Bunch Movies 🎬</Text>
+        <Ionicons name="notifications-outline" size={24} color="white" />
+      </View>
+
+      {/* ✅ Reusable Search Bar */}
+      <SearchBar
+        value={searchQuery}
+        onChangeText={(text) => setSearchQuery(text)}
+        placeholder="Search for movies..."
+      />
+
+      {/* Categories */}
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categories}>
+        {["Action", "Comedy", "Drama", "Horror", "Sci-Fi"].map((cat, index) => (
+          <TouchableOpacity key={index} style={styles.categoryChip}>
+            <Text style={styles.categoryText}>{cat}</Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+
+      {/* Trending Movies */}
+      <Text style={styles.sectionTitle}>🔥 Trending</Text>
+      <FlatList
+        horizontal
+        data={movies}
+        keyExtractor={(item) => item.id}
+        showsHorizontalScrollIndicator={false}
+        renderItem={({ item }) => (
+          <View style={styles.movieCard}>
+            <Image source={{ uri: item.poster }} style={styles.poster} />
+            <Text style={styles.movieTitle}>{item.title}</Text>
+          </View>
+        )}
+      />
+
+      {/* Popular */}
+      <Text style={styles.sectionTitle}>⭐ Popular</Text>
+      <FlatList
+        horizontal
+        data={movies}
+        keyExtractor={(item) => item.id}
+        showsHorizontalScrollIndicator={false}
+        renderItem={({ item }) => (
+          <View style={styles.movieCard}>
+            <Image source={{ uri: item.poster }} style={styles.poster} />
+            <Text style={styles.movieTitle}>{item.title}</Text>
+          </View>
+        )}
+      />
+    </ScrollView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#191a2b",
+    padding: 15,
+    paddingTop: 50,
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 15,
+  },
+  appName: {
+    color: "white",
+    fontSize: 22,
+    fontWeight: "bold",
+  },
+  categories: {
+    marginBottom: 20,
+  },
+  categoryChip: {
+    backgroundColor: "#2a2d3e",
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    borderRadius: 20,
+    marginRight: 10,
+  },
+  categoryText: {
+    color: "white",
+    fontSize: 14,
+  },
+  sectionTitle: {
+    color: "white",
+    fontSize: 18,
+    fontWeight: "bold",
+    marginVertical: 10,
+  },
+  movieCard: {
+    marginRight: 15,
+    width: 120,
+  },
+  poster: {
+    width: "100%",
+    height: 180,
+    borderRadius: 10,
+    marginBottom: 5,
+  },
+  movieTitle: {
+    color: "white",
+    fontSize: 14,
+    fontWeight: "600",
+  },
+});
